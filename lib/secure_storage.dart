@@ -1,18 +1,21 @@
 import 'dart:io';
 
-import 'package:secure_storage/managers/secure_storage_android_platform.dart';
-import 'package:secure_storage/managers/secure_storage_ios_platform.dart';
+import 'package:secure_storage/src/attributes/ios_keychain_attributes.dart';
+import 'package:secure_storage/src/platforms/secure_storage_android_platform.dart';
+import 'package:secure_storage/src/platforms/secure_storage_ios_platform.dart';
 
 /// A class to manage the secure storage.
 /// Keychain on iOS and BlockStore on Android.
 /// https://developers.google.com/identity/blockstore/android
 /// https://developer.apple.com/documentation/security/keychain_services
 class SecureStorage {
-  const SecureStorage._();
+  SecureStorage({
+    IOSKeychainAttributes iosAttributes = const IOSKeychainAttributes(),
+  })  : _androidPlatform = const SecureStorageAndroidPlatform(),
+        _iosPlatform = SecureStorageIOSPlatform(attributes: iosAttributes);
 
-  factory SecureStorage() => instance;
-
-  static const instance = SecureStorage._();
+  final SecureStorageAndroidPlatform _androidPlatform;
+  final SecureStorageIOSPlatform _iosPlatform;
 
   /// Put value to secure storage
   /// [key] - The key to store the value.
@@ -22,9 +25,9 @@ class SecureStorage {
   /// Throws an [UnimplementedError] if the platform is not supported.
   Future<bool> put(String key, String value) async {
     if (Platform.isAndroid) {
-      return SecureStorageAndroidPlatform.put(key: key, value: value);
+      return _androidPlatform.put(key: key, value: value);
     } else if (Platform.isIOS) {
-      return SecureStorageIOSPlatform.put(key, value);
+      return _iosPlatform.put(key, value);
     }
     return throw UnimplementedError('Platform not supported');
   }
@@ -36,9 +39,9 @@ class SecureStorage {
   /// Throws an [UnimplementedError] if the platform is not supported.
   Future<String?> get(String key) async {
     if (Platform.isAndroid) {
-      return SecureStorageAndroidPlatform.get(key);
+      return _androidPlatform.get(key);
     } else if (Platform.isIOS) {
-      return SecureStorageIOSPlatform.get(key);
+      return _iosPlatform.get(key);
     }
     return throw UnimplementedError('Platform not supported');
   }
@@ -50,9 +53,9 @@ class SecureStorage {
   /// Throws an [UnimplementedError] if the platform is not supported.
   Future<bool?> delete(String key) async {
     if (Platform.isAndroid) {
-      return SecureStorageAndroidPlatform.delete(key);
+      return _androidPlatform.delete(key);
     } else if (Platform.isIOS) {
-      return SecureStorageIOSPlatform.delete(key);
+      return _iosPlatform.delete(key);
     }
     return throw UnimplementedError('Platform not supported');
   }
