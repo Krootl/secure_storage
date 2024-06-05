@@ -1,13 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import 'secure_storage_platform.dart';
+
 /// https://developers.google.com/identity/blockstore/android
-class SecureStorageAndroidPlatform {
+class SecureStorageAndroidPlatform extends SecureStoragePlatform {
   const SecureStorageAndroidPlatform();
 
   final _tag = 'SecureStorageAndroidPlatform';
   final _channel = const MethodChannel('plugin.krootl.com/blockstore/method');
 
+  @override
   Future<bool> put({required String key, required String? value}) async {
     try {
       await _channel.invokeMethod('put', {'key': key, 'value': value});
@@ -18,6 +21,7 @@ class SecureStorageAndroidPlatform {
     return false;
   }
 
+  @override
   Future<String?> get(String key) async {
     try {
       final result = await _channel.invokeMethod('get', {'key': key});
@@ -28,6 +32,7 @@ class SecureStorageAndroidPlatform {
     return null;
   }
 
+  @override
   Future<bool> delete(String key) async {
     try {
       await _channel.invokeMethod('delete', {'key': key});

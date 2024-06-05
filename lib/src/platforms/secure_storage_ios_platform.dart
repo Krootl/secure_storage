@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:secure_storage/src/attributes/ios_keychain_attributes.dart';
+import 'package:secure_storage/src/platforms/secure_storage_platform.dart';
 
 /// A class to manage the keychain storage on iOS.
-class SecureStorageIOSPlatform {
+class SecureStorageIOSPlatform extends SecureStoragePlatform {
   const SecureStorageIOSPlatform({
     required this.attributes,
   });
@@ -13,7 +14,8 @@ class SecureStorageIOSPlatform {
 
   final IOSKeychainAttributes attributes;
 
-  Future<bool> put(String key, String? value) async {
+  @override
+  Future<bool> put({required String key, required String? value}) async {
     try {
       await _channel.invokeMethod('put', {
         'account': attributes.account,
@@ -27,6 +29,7 @@ class SecureStorageIOSPlatform {
     return false;
   }
 
+  @override
   Future<String?> get(String key) async {
     try {
       final result = await _channel.invokeMethod('get', {
@@ -40,6 +43,7 @@ class SecureStorageIOSPlatform {
     return null;
   }
 
+  @override
   Future<bool> delete(String key) async {
     try {
       await _channel.invokeMethod('delete', {
