@@ -13,7 +13,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
-private const val METHOD_CHANNEL_BLOCK_STORE = "co.ibilly.client/block-store/method"
+private const val METHOD_CHANNEL_BLOCK_STORE = "plugin.krootl.com/blockstore/method"
 /** SecureStoragePlugin */
 class SecureStoragePlugin : FlutterPlugin, MethodCallHandler {
 
