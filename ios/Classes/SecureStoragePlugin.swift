@@ -9,7 +9,6 @@ public class SecureStoragePlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    switch call.method {
         if call.method == "put" {
             guard let args = call.arguments as? [String: Any],
                   let service = args["service"] as? String,
@@ -51,8 +50,6 @@ public class SecureStoragePlugin: NSObject, FlutterPlugin {
         } else {
             result(FlutterMethodNotImplemented)
         }
-        default:
-            result(FlutterMethodNotImplemented)
     }
   }
 }
