@@ -51,9 +51,8 @@ public class SecureStoragePlugin: NSObject, FlutterPlugin {
         } else {
             result(FlutterMethodNotImplemented)
         }
-        default {
+        default:
             result(FlutterMethodNotImplemented)
-        }
     }
   }
 }
