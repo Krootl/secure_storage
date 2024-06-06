@@ -3,6 +3,7 @@ package com.krootl.secure_storage
 import android.content.Context
 
 import com.google.android.gms.auth.blockstore.Blockstore
+import com.google.android.gms.auth.blockstore.BlockstoreClient
 import com.google.android.gms.auth.blockstore.DeleteBytesRequest
 import com.google.android.gms.auth.blockstore.RetrieveBytesRequest
 
@@ -17,15 +18,14 @@ private const val METHOD_CHANNEL_BLOCK_STORE = "plugin.krootl.com/blockstore/met
 /** SecureStoragePlugin */
 class SecureStoragePlugin : FlutterPlugin, MethodCallHandler {
 
-    private lateinit var context : Context
     private lateinit var channel: MethodChannel
 
-    private val blockstoreClient by lazy { Blockstore.getClient(context) }
+    private lateinit var blockstoreClient: BlockstoreClient
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        blockstoreClient = Blockstore.getClient(flutterPluginBinding.applicationContext)
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_BLOCK_STORE)
         channel.setMethodCallHandler(this)
-        context = flutterPluginBinding.applicationContext
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
