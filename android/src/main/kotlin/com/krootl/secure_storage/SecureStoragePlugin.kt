@@ -1,6 +1,6 @@
 package com.krootl.secure_storage
 
-import androidx.annotation.NonNull
+import android.content.Context
 
 import com.google.android.gms.auth.blockstore.Blockstore
 import com.google.android.gms.auth.blockstore.DeleteBytesRequest
@@ -13,17 +13,19 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
+private const val METHOD_CHANNEL_BLOCK_STORE = "co.ibilly.client/block-store/method"
 /** SecureStoragePlugin */
 class SecureStoragePlugin : FlutterPlugin, MethodCallHandler {
-    /// The MethodChannel that will the communication between Flutter and native Android
-    ///
-    /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-    /// when the Flutter Engine is detached from the Activity
+
+    private lateinit var context : Context
     private lateinit var channel: MethodChannel
 
+    private val blockstoreClient by lazy { Blockstore.getClient(context) }
+
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "plugin.krootl.com/blockstore/method")
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_BLOCK_STORE)
         channel.setMethodCallHandler(this)
+        context = flutterPluginBinding.applicationContext
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
