@@ -39,7 +39,8 @@ class SecureStoragePlugin : FlutterPlugin, MethodCallHandler {
             val key = call.argument<String>("key")
             getBlockStoreData(key!!, result)
         } else if (call.method.equals("delete")) {
-            deleteBlockStoreData()
+            val key = call.argument<String>("key")
+            deleteBlockStoreData(key!!)
             result.success(null)
         } else {
             result.notImplemented()
@@ -72,8 +73,11 @@ class SecureStoragePlugin : FlutterPlugin, MethodCallHandler {
         }
     }
 
-    private fun deleteBlockStoreData() {
-        val deleteBytesRequest = DeleteBytesRequest.Builder().setDeleteAll(true).build()
+    private fun deleteBlockStoreData(key: String) {
+        val mutableStringList: MutableList<String> = mutableListOf()
+        mutableStringList.add(key)
+
+        val deleteBytesRequest = DeleteBytesRequest.Builder().setKeys(mutableStringList).build()
         blockstoreClient.deleteBytes(deleteBytesRequest)
     }
 
